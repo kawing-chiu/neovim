@@ -3,6 +3,7 @@
 " 2. Don't forget to install pynvim.
 " 3. Run :PlugInstall to install plugins.
 " 4. Run :messages to see all warning/error messages.
+" 5. The :h command has a 'hint' feature. Try :h ctrl-y<Ctrl-D>.
 
 
 """""" Options for this script
@@ -14,13 +15,15 @@ let s:debug = 0
 " not exist.
 "   - ctags: Universal-ctags. This is required for tagbar to work correctly.
 "   - pyls: Language server for Python.
-let s:external_dependencies = ['ctags', 'pyls']
+"   - rg: ripgrep, a fast grep-like tool written in rust.
+"   - fzf: A fuzzy search tool.
+let s:external_dependencies = ['ctags', 'fzf', 'rg']
 
 """ Optional External dependencies
 " Dependencies listed here will only be check if debug is enabled. These are
 " mostly language servers.
 "   - clangd: Langauge server for C++.
-let s:optional_external_dependencies = ['clangd']
+let s:optional_external_dependencies = ['clangd', 'pyls']
 
 
 """""" Helper functions
@@ -136,16 +139,22 @@ Plug 'ncm2/ncm2-vim' | Plug 'Shougo/neco-vim'
 " Plug 'davidhalter/jedi-vim'
 
 """ Function signature viewer
+Plug 'Shougo/echodoc.vim'
+
 " Plug 'ncm2/float-preview.nvim'
-" Plug 'Shougo/echodoc.vim'
 
 """ Fuzzy finder
-Plug 'Yggdroot/LeaderF'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+
+" Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'Yggdroot/LeaderF'
 
 """ Snippet
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+
+" This project has a lot of snippet examples.
+" Plug 'honza/vim-snippets'
 
 """ Session manager
 Plug 'tpope/vim-obsession'
@@ -207,8 +216,9 @@ autocmd TextChangedI * call s:SafeCall(function('ncm2#auto_trigger'),
 " line.
 inoremap <expr> <CR> pumvisible() ? "\<C-y>\<CR>" : "\<CR>"
 
-" Use <Tab> to select the popup menu:
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" Use <Tab>/<S-Tab> to select the popup menu
+" But we have more complex tab handling logic below, so we comment this out.
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Make popup delay shorter
@@ -226,29 +236,65 @@ let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 " <Tab>, otherwise user-defined <Tab> mapping will be overridden.
 let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
 
+" This function defines the <Tab> handling logic:
+" 1. If there's a ultisnips snippet, expand it.
+" 2. If popup is visible, ask ncm2_ultisnips whether it has something to
+"    expand.
+" 3. If popup is visible, select the first entry.
+" 4. If none of the above is true, insert a literal <Tab>.
+function! s:TabHandler()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res > 0
+        return ""
+    endif
+    if pumvisible()
+        " ncm2_ultisnips will only expand if both pumvisible() and the
+        " following completed_is_snippet() check is true. (This is learned
+        " from its code, so may be subject to change.)
+        if ncm2_ultisnips#completed_is_snippet()
+            call s:Debug('ncm2 completed_is_snippet')
+            " The argument of this function will be pass to feedkeys() if
+            " ncm2_ultisnips has nothing to expand.
+            return ncm2_ultisnips#expand_or("")
+        else
+            return "\<C-n>"
+        endif
+    else
+        return "\<Tab>"
+    endif
+endfunction
+
+inoremap <silent> <Tab> <C-r>=<SID>TabHandler()<CR>
+
+""" echodoc
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = 'floating'
+
 """ LanguageClient-neovim
 " List all language servers. Add more if needed.
 let g:LanguageClient_serverCommands = {
             \ 'python': ['pyls'],
             \ 'cpp': ['clangd'],
             \ }
+
 " Too many messages. Let's set it to error for now.
 let g:LanguageClient_diagnosticsMaxSeverity = 'Error'
+
 "let g:LanguageClient_loggingFile = '/tmp/lc.log'
 "let g:LanguageClient_loggingLevel = 'DEBUG'
 
 " Define shortcuts for LanguageClient
 function SetLSPShortcuts()
-  nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-  nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-  nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-  nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-  nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-  nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-  nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-  nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+  nnoremap <Leader>ld :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <Leader>lr :call LanguageClient#textDocument_rename()<CR>
+  nnoremap <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
+  nnoremap <Leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+  nnoremap <Leader>lx :call LanguageClient#textDocument_references()<CR>
+  nnoremap <Leader>la :call LanguageClient_workspace_applyEdit()<CR>
+  nnoremap <Leader>lc :call LanguageClient#textDocument_completion()<CR>
+  nnoremap <Leader>lh :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <Leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
+  nnoremap <Leader>lm :call LanguageClient_contextMenu()<CR>
 endfunction()
 
 augroup LSP
@@ -294,10 +340,6 @@ let g:deoplete#enable_at_startup = 1
 """ float-preview
 let g:float_preview#docked = 1
 
-""" echodoc
-let g:echodoc#enable_at_startup = 1
-let g:echodoc#type = 'floating'
-
 """ jedi-vim
 let g:jedi#auto_initialization = 0
 " We use jedi-vim through deoplete-jedi, so jedi-vim's completions should be
@@ -316,6 +358,9 @@ let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-omnisharp',
 " Set python path explicitly, so that we can use virtualenv without installing
 " pynvim in it. See :h python-virtualenv.
 let g:python3_host_prog = '/usr/bin/python3'
+
+" Mapleader
+let mapleader = " "
 
 " Search options
 set hlsearch ignorecase smartcase incsearch
@@ -357,10 +402,27 @@ set shortmess+=c
 " does not work well with nerdtree.
 set sessionoptions-=blank
 
-""" Key mappings
-" Mapleader
-let mapleader = " "
+" Adjust the format options (used for comment etc.)
+" n: recognize numbered lists
+" m: allow to break at a multi-byte character above 255
+" M: don't insert a space before or after a multi-byte character
+" o: automatically insert the comment leader after hitting 'o'
+" r: automatically insert the comment leader after hitting <Enter>
+set formatoptions+=nmMor
 
+""" Grep settings
+" Use ripgrep as grep command
+if executable('rg')
+    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+endif
+
+nnoremap <Leader>g :silent lgrep<Space>
+
+" Move through location list. 'l' for location list.
+nnoremap <silent> [l :lprevious<CR>
+nnoremap <silent> ]l :lnext<CR>
+
+""" Key mappings
 " Switch to previous/next tab
 nnoremap = gt
 nnoremap K gt
