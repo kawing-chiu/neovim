@@ -225,6 +225,7 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 let ncm2#popup_delay = 5
 " This fuzzy matcher seems to be better
 let g:ncm2#matcher = 'substrfuzzy'
+let g:ncm2#complete_length=[[1,2],[7,1]]
 
 """ ultisnips
 let g:UltiSnipsEditSplit = 'vertical'
