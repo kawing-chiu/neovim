@@ -4,6 +4,15 @@
 " 3. Run :PlugInstall to install plugins.
 " 4. Run :messages to see all warning/error messages.
 " 5. The :h command has a 'hint' feature. Try :h ctrl-y<Ctrl-D>.
+" 6. Don't use Alt to map keys. <Alt-(key)> will be interpreted by many
+"    terminals as <Esc>(key), and the interpretation is not unified across
+"    terminals. The 'cat' command can be used to check how the terminal
+"    interprets <Alt-(key)> (or any other key code).
+
+
+"""""" Mapleader
+" mapleader has to be defined at the beginning. See :h mapleader.
+let mapleader = " "
 
 
 """""" Options for this script
@@ -147,8 +156,8 @@ Plug 'Shougo/echodoc.vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
-" Plug 'ctrlpvim/ctrlp.vim'
 " Plug 'Yggdroot/LeaderF'
+" Plug 'ctrlpvim/ctrlp.vim'
 
 """ Snippet
 Plug 'SirVer/ultisnips'
@@ -278,6 +287,8 @@ let g:LanguageClient_serverCommands = {
             \ 'cpp': ['clangd'],
             \ }
 
+let g:LanguageClient_hasSnippetSupport = 1
+
 " Too many messages. Let's set it to error for now.
 let g:LanguageClient_diagnosticsMaxSeverity = 'Error'
 
@@ -286,16 +297,22 @@ let g:LanguageClient_diagnosticsMaxSeverity = 'Error'
 
 " Define shortcuts for LanguageClient
 function SetLSPShortcuts()
-  nnoremap <Leader>ld :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <Leader>lr :call LanguageClient#textDocument_rename()<CR>
-  nnoremap <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
-  nnoremap <Leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-  nnoremap <Leader>lx :call LanguageClient#textDocument_references()<CR>
-  nnoremap <Leader>la :call LanguageClient_workspace_applyEdit()<CR>
-  nnoremap <Leader>lc :call LanguageClient#textDocument_completion()<CR>
-  nnoremap <Leader>lh :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <Leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-  nnoremap <Leader>lm :call LanguageClient_contextMenu()<CR>
+    " Jump to definition.
+    nnoremap <Leader>ld :call LanguageClient#textDocument_definition()<CR>
+    " Jump to places where the symbol under cursor is used.
+    nnoremap <Leader>lx :call LanguageClient#textDocument_references()<CR>
+    " List all symbols in current buffer.
+    nnoremap <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
+    " List all available actions.
+    nnoremap <Leader>lm :call LanguageClient_contextMenu()<CR>
+
+    " Not tested yet:
+    nnoremap <Leader>li :call LanguageClient#textDocument_implementation()<CR>
+    nnoremap <Leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+    nnoremap <Leader>lr :call LanguageClient#textDocument_rename()<CR>
+    nnoremap <Leader>lh :call LanguageClient#textDocument_hover()<CR>
+    nnoremap <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
+    nnoremap <Leader>la :call LanguageClient#workspace_applyEdit()<CR>
 endfunction()
 
 augroup LSP
@@ -307,7 +324,9 @@ augroup END
 " Where to save the sessions
 "let g:workspace_session_directory = stdpath('data') . '/workspace_sessions/'
 let g:workspace_session_name = '.session.vim'
-" Disable the persist undo history function. It is not as useful as it seems.
+" Disable the autosave feature.
+let g:workspace_autosave = 0
+" Disable the persist undo history feature. It is not as useful as it seems.
 let g:workspace_persist_undo_history = 0
 let g:workspace_undodir='.undodir.vim'
 
@@ -315,16 +334,19 @@ let g:workspace_undodir='.undodir.vim'
 let g:multi_cursor_use_default_mapping = 0
 
 """ nerdtree
-nnoremap <M-j> :NERDTreeToggle<CR>
-nnoremap <M-n> :NERDTreeFind<CR>
-"nnoremap <M-m>t :tabe %<CR>:NERDTreeFind<CR>
+nnoremap <Leader>j :NERDTreeToggle<CR>
+nnoremap <Leader>n :NERDTreeFind<CR>
+"nnoremap <Leader>m :tabe %<CR>:NERDTreeFind<CR>
 
 " Close nerdtree after opening a file by default
 let g:NERDTreeQuitOnOpen = 1
 
 """ tagbar
-nnoremap <M-k> :TagbarToggle<CR>
+nnoremap <Leader>k :TagbarToggle<CR>
 let g:tagbar_sort = 0
+
+""" fzf
+nnoremap <Leader>f :FZF<CR>
 
 """ vim-gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
@@ -360,9 +382,6 @@ let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-omnisharp',
 " pynvim in it. See :h python-virtualenv.
 let g:python3_host_prog = '/usr/bin/python3'
 
-" Mapleader
-let mapleader = " "
-
 " Search options
 set hlsearch ignorecase smartcase incsearch
 
@@ -376,8 +395,6 @@ syntax enable
 autocmd BufEnter * syntax sync fromstart
 
 set backspace=indent,eol,start
-
-set timeoutlen=500
 
 " Add gb18030 after utf-8 for better Chinese support
 set fileencodings=ucs-bom,utf-8,gb18030,default,latin1
