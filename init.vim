@@ -11,8 +11,8 @@
 
 
 """""" Mapleader
-" mapleader has to be defined at the beginning. See :h mapleader.
-let mapleader = " "
+" mapleader has to be set at the beginning. See :h mapleader.
+let g:mapleader = "\<Space>"
 
 
 """""" Options for this script
@@ -351,6 +351,17 @@ nnoremap <Leader>f :FZF<CR>
 """ vim-gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
 
+""" vim-which-key
+let g:space_key_map = {
+            \ 'g': 'lgrep',
+            \ 'l': 'which_key_ignore',
+            \ 'ld': '[language server] jump to definition',
+            \ 'lx': '[language server] find references',
+            \ }
+
+call which_key#register('<Space>', "g:space_key_map")
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+
 
 """""" Config for unused plugins
 
@@ -411,6 +422,9 @@ set completeopt=menuone
 " The following is recommended by ncm2:
 autocmd User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
 autocmd User Ncm2PopupClose set completeopt=menuone
+
+" Timeout for key mappings.
+set timeoutlen=500
 
 " This will surpass some ins-completion-menu messages. Also recommended by
 " ncm2.
