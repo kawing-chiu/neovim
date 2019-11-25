@@ -158,8 +158,8 @@ Plug 'Shougo/echodoc.vim'
 """ Fuzzy finder
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'Yggdroot/LeaderF'
 
-" Plug 'Yggdroot/LeaderF'
 " Plug 'ctrlpvim/ctrlp.vim'
 
 """ Snippet
@@ -349,7 +349,7 @@ nnoremap <Leader>k :TagbarToggle<CR>
 let g:tagbar_sort = 0
 
 """ fzf
-nnoremap <Leader>f :FZF<CR>
+nnoremap <Leader>F :FZF<CR>
 
 """ vim-gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
