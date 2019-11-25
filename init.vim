@@ -22,7 +22,7 @@ let s:debug = 0
 """ External dependencies
 " Dependencies listed here will be check for existence. A warning is issued if
 " not exist.
-"   - ctags: Universal-ctags. This is required for tagbar to work correctly.
+"   - ctags: Universal-ctags. It is required for tagbar to work correctly.
 "   - pyls: Language server for Python.
 "   - rg: ripgrep, a fast grep-like tool written in rust.
 "   - fzf: A fuzzy search tool.
@@ -32,7 +32,7 @@ let s:external_dependencies = ['ctags', 'fzf', 'rg']
 " Dependencies listed here will only be check if debug is enabled. These are
 " mostly language servers.
 "   - clangd: Langauge server for C++.
-let s:optional_external_dependencies = ['clangd', 'pyls']
+let s:optional_external_dependencies = ['clangd', 'pyls', 'yapf']
 
 
 """""" Helper functions
@@ -42,7 +42,7 @@ let s:optional_external_dependencies = ['clangd', 'pyls']
 let s:this_file_name = expand('<sfile>:t')
 
 function! s:AsString(msg)
-    " This is the right way to test a variable's type:
+    " This is how you test a variable's type:
     if type(a:msg) != v:t_string
         let l:msg = string(a:msg)
     else
@@ -112,6 +112,15 @@ for s:d in s:optional_external_dependencies
     endif
 endfor
 
+""" Create local.plugin.vim and local.config.vim if not exists.
+" This is how you check whether a file exists:
+let s:local_plugin_file = stdpath('config') . '/local.plugin.vim'
+let s:local_config_file = stdpath('config') . '/local.config.vim'
+if empty(glob(s:local_plugin_file))
+    call system('touch ' . s:local_config_file)
+    call system('touch ' . s:local_plugin_file)
+endif
+
 
 """""" Plugin list (using vim-plug as plugin manager)
 call plug#begin(stdpath('data') . '/plugged')
@@ -120,7 +129,9 @@ call plug#begin(stdpath('data') . '/plugged')
 Plug 'sheerun/vim-polyglot'
 
 """ Color scheme
-Plug 'joshdick/onedark.vim'
+Plug 'liuchengxu/space-vim-dark'
+
+" Plug 'joshdick/onedark.vim'
 
 """ Statusline / tabline
 Plug 'itchyny/lightline.vim'
@@ -199,6 +210,9 @@ Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 """ Misc
 " Show key-bindings in popup window
 Plug 'liuchengxu/vim-which-key'
+
+" Load local plugin list
+execute 'source ' . s:local_plugin_file
 
 call plug#end()
 
@@ -390,18 +404,6 @@ let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-omnisharp',
 
 """""" Config for neovim per se
 
-""" Color scheme
-set background=dark
-
-" Enalbe 24-bit true color support. Some terminal may not support it. Tmux
-" before version 2.2 does not support it, either.
-if (has("termguicolors"))
-    set termguicolors
-endif
-
-" Load a colorscheme.
-colorscheme onedark
-
 """ General settings
 " Set python path explicitly, so that we can use virtualenv without installing
 " pynvim in it. See :h python-virtualenv.
@@ -420,10 +422,6 @@ syntax enable
 " More reliable synctax highlighting
 autocmd BufEnter * syntax sync fromstart
 
-" Reset background color to pure black no matter what color scheme is used.
-" This line has to be put after colorscheme and syntax settings.
-highlight Normal guibg=NONE ctermbg=NONE
-
 set backspace=indent,eol,start
 
 " Add gb18030 after utf-8 for better Chinese support
@@ -434,7 +432,7 @@ set signcolumn=yes
 " Except in tagbar and nerdtree
 autocmd FileType tagbar,nerdtree setlocal signcolumn=no
 " But make it black
-highlight clear SignColumn
+highlight SignColumn ctermbg=NONE guibg=NONE
 
 " The default of completeopt is 'menu,preview'.
 set completeopt=menuone
@@ -460,6 +458,23 @@ set sessionoptions-=blank
 " o: automatically insert the comment leader after hitting 'o'
 " r: automatically insert the comment leader after hitting <Enter>
 set formatoptions+=nmMor
+
+""" Color scheme
+set background=dark
+
+" Enalbe 24-bit true color support. Some terminal may not support it. Tmux
+" before version 2.2 does not support it, either.
+if (has("termguicolors"))
+    set termguicolors
+endif
+
+" Load a colorscheme.
+colorscheme space-vim-dark
+highlight LineNr ctermbg=NONE guibg=NONE
+
+" Reset background color to pure black no matter what color scheme is used.
+" This line has to be put after colorscheme and syntax settings.
+highlight Normal guibg=NONE ctermbg=NONE
 
 """ Grep settings
 " Use ripgrep as grep command
@@ -514,3 +529,6 @@ vnoremap g<C-]> <C-]>
 nnoremap -p :set paste! paste?<CR>
 nnoremap -n :setl nu! nu?<CR>
 nnoremap -l :setl list! list?<CR>
+
+" Load local config file
+execute 'source ' . s:local_config_file
