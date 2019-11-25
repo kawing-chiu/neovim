@@ -431,8 +431,6 @@ set fileencodings=ucs-bom,utf-8,gb18030,default,latin1
 set signcolumn=yes
 " Except in tagbar and nerdtree
 autocmd FileType tagbar,nerdtree setlocal signcolumn=no
-" But make it black
-highlight SignColumn ctermbg=NONE guibg=NONE
 
 " The default of completeopt is 'menu,preview'.
 set completeopt=menuone
@@ -470,11 +468,14 @@ endif
 
 " Load a colorscheme.
 colorscheme space-vim-dark
-highlight LineNr ctermbg=NONE guibg=NONE
 
 " Reset background color to pure black no matter what color scheme is used.
 " This line has to be put after colorscheme and syntax settings.
 highlight Normal guibg=NONE ctermbg=NONE
+
+" Do the same for signcolumn and the line numer column.
+highlight SignColumn ctermbg=NONE guibg=NONE
+highlight LineNr ctermbg=NONE guibg=NONE
 
 """ Grep settings
 " Use ripgrep as grep command
