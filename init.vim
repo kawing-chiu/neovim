@@ -161,9 +161,7 @@ Plug 'ncm2/ncm2-vim' | Plug 'Shougo/neco-vim'
 
 " deoplete's documentation is bad. That's the reason I don't use it.
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
 " Plug 'deoplete-plugins/deoplete-jedi'
-" Plug 'davidhalter/jedi-vim'
 
 """ Function signature viewer
 Plug 'Shougo/echodoc.vim'
@@ -208,8 +206,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 """ Language-specific plugins
-" Python auto-formatter
+" Python
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
+Plug 'davidhalter/jedi-vim'
 
 """ Misc
 " Show key-bindings in popup window
@@ -374,6 +373,16 @@ nnoremap <Leader>F :FZF<CR>
 """ yapf
 autocmd FileType python nnoremap <buffer> <Leader>Y :YAPF<CR>
 
+""" jedi-vim
+" We are using ncm2 as completion framework, so jedi-vim's completions should
+" be disabled.
+let g:jedi#auto_initialization = 0
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#completions_enabled = 0
+
+" pyls's rename does not work yet, use jedi's instead.
+autocmd FileType python nnoremap <buffer> <Leader>lr :call jedi#rename()<CR>
+
 """ vim-gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
 
@@ -398,13 +407,6 @@ let g:deoplete#enable_at_startup = 1
 
 """ float-preview
 let g:float_preview#docked = 1
-
-""" jedi-vim
-let g:jedi#auto_initialization = 0
-" We use jedi-vim through deoplete-jedi, so jedi-vim's completions should be
-" disabled.
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
 
 """ coc.nvim
 let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-omnisharp',
