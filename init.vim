@@ -8,6 +8,7 @@
 "    terminals as <Esc>(key), and the interpretation is not unified across
 "    terminals. The 'cat' command can be used to check how the terminal
 "    interprets <Alt-(key)> (or any other key code).
+" 7. Use local.plugin.vim and local.config.vim to add local settings.
 
 
 """""" Mapleader
@@ -214,7 +215,7 @@ Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 " Show key-bindings in popup window
 Plug 'liuchengxu/vim-which-key'
 
-" Load local plugin list
+""" Load local plugin list
 if s:source_local_config
     execute 'source ' . s:local_plugin_file
 endif
@@ -536,7 +537,10 @@ nnoremap -p :set paste! paste?<CR>
 nnoremap -n :setl nu! nu?<CR>
 nnoremap -l :setl list! list?<CR>
 
-" Load local config file
+" Use <C-a> to move to the start of line, like in bash
+cnoremap <C-a> <C-b>
+
+""" Load local config file
 if s:source_local_config
     execute 'source ' . s:local_config_file
 endif
