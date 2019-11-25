@@ -119,6 +119,9 @@ call plug#begin(stdpath('data') . '/plugged')
 """ Syntax highlighting and indent
 Plug 'sheerun/vim-polyglot'
 
+""" Color scheme
+Plug 'joshdick/onedark.vim'
+
 """ Statusline / tabline
 Plug 'itchyny/lightline.vim'
 
@@ -354,7 +357,6 @@ let g:gitgutter_override_sign_column_highlight = 0
 """ vim-which-key
 let g:space_key_map = {
             \ 'g': 'lgrep',
-            \ 'l': 'which_key_ignore',
             \ 'ld': '[language server] jump to definition',
             \ 'lx': '[language server] find references',
             \ }
@@ -388,6 +390,18 @@ let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-omnisharp',
 
 """""" Config for neovim per se
 
+""" Color scheme
+set background=dark
+
+" Enalbe 24-bit true color support. Some terminal may not support it. Tmux
+" before version 2.2 does not support it, either.
+if (has("termguicolors"))
+    set termguicolors
+endif
+
+" Load a colorscheme.
+colorscheme onedark
+
 """ General settings
 " Set python path explicitly, so that we can use virtualenv without installing
 " pynvim in it. See :h python-virtualenv.
@@ -403,7 +417,12 @@ set tabstop=4 shiftwidth=4 expandtab
 filetype plugin indent on
 syntax enable
 
+" More reliable synctax highlighting
 autocmd BufEnter * syntax sync fromstart
+
+" Reset background color to pure black no matter what color scheme is used.
+" This line has to be put after colorscheme and syntax settings.
+highlight Normal guibg=NONE ctermbg=NONE
 
 set backspace=indent,eol,start
 
