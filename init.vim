@@ -321,21 +321,21 @@ let g:LanguageClient_diagnosticsMaxSeverity = 'Error'
 " Define shortcuts for LanguageClient
 function SetLSPShortcuts()
     " Jump to definition.
-    nnoremap <Leader>ld :call LanguageClient#textDocument_definition()<CR>
+    nnoremap <buffer> <Leader>ld :call LanguageClient#textDocument_definition()<CR>
     " Jump to places where the symbol under cursor is used.
-    nnoremap <Leader>lx :call LanguageClient#textDocument_references()<CR>
+    nnoremap <buffer> <Leader>lx :call LanguageClient#textDocument_references()<CR>
     " List all symbols in current buffer.
-    nnoremap <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
+    nnoremap <buffer> <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
     " List all available actions.
-    nnoremap <Leader>lm :call LanguageClient_contextMenu()<CR>
+    nnoremap <buffer> <Leader>lm :call LanguageClient_contextMenu()<CR>
 
     " Not tested yet:
-    nnoremap <Leader>li :call LanguageClient#textDocument_implementation()<CR>
-    nnoremap <Leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-    nnoremap <Leader>lr :call LanguageClient#textDocument_rename()<CR>
-    nnoremap <Leader>lh :call LanguageClient#textDocument_hover()<CR>
-    nnoremap <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
-    nnoremap <Leader>la :call LanguageClient#workspace_applyEdit()<CR>
+    nnoremap <buffer> <Leader>li :call LanguageClient#textDocument_implementation()<CR>
+    nnoremap <buffer> <Leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+    nnoremap <buffer> <Leader>lr :call LanguageClient#textDocument_rename()<CR>
+    nnoremap <buffer> <Leader>lh :call LanguageClient#textDocument_hover()<CR>
+    nnoremap <buffer> <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
+    nnoremap <buffer> <Leader>la :call LanguageClient#workspace_applyEdit()<CR>
 endfunction()
 
 augroup LSP
@@ -370,6 +370,9 @@ let g:tagbar_sort = 0
 
 """ fzf
 nnoremap <Leader>F :FZF<CR>
+
+""" yapf
+autocmd FileType python nnoremap <buffer> <Leader>Y :YAPF<CR>
 
 """ vim-gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
