@@ -19,6 +19,9 @@ let g:mapleader = "\<Space>"
 """ Set to 1 to enable debug output.
 let s:debug = 0
 
+""" Set to 0 to disable sourcing local config files.
+let s:source_local_config = 1
+
 """ External dependencies
 " Dependencies listed here will be check for existence. A warning is issued if
 " not exist.
@@ -212,7 +215,9 @@ Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'liuchengxu/vim-which-key'
 
 " Load local plugin list
-execute 'source ' . s:local_plugin_file
+if s:source_local_config
+    execute 'source ' . s:local_plugin_file
+endif
 
 call plug#end()
 
@@ -483,7 +488,7 @@ if executable('rg')
     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 endif
 
-nnoremap <Leader>g :silent lgrep<Space>
+nnoremap <Leader>g :silent lgrep<Space>''<Left>
 
 " Move through location list. 'l' for location list.
 nnoremap <silent> [l :lprevious<CR>
@@ -532,4 +537,6 @@ nnoremap -n :setl nu! nu?<CR>
 nnoremap -l :setl list! list?<CR>
 
 " Load local config file
-execute 'source ' . s:local_config_file
+if s:source_local_config
+    execute 'source ' . s:local_config_file
+endif
