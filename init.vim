@@ -401,6 +401,11 @@ let g:jedi#completions_enabled = 0
 " pyls's rename does not work yet, use jedi's instead.
 autocmd FileType python nnoremap <buffer> <Leader>lr :call jedi#rename()<CR>
 
+""" vim-test
+nnoremap <silent> <leader>tt :TestNearest<CR>
+nnoremap <silent> <leader>tf :TestFile<CR>
+nnoremap <silent> <leader>ts :TestSuite<CR>
+
 """ vim-gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
 
@@ -409,6 +414,10 @@ let g:space_key_map = {
             \ 'g': 'lgrep',
             \ 'ld': '[language server] jump to definition',
             \ 'lx': '[language server] find references',
+            \ 'lr': '[language server] rename',
+            \ 'tt': '[test runner] run current test',
+            \ 'tf': '[test runner] run current test file',
+            \ 'ts': '[test runner] run the whole test suite',
             \ }
 
 call which_key#register('<Space>', "g:space_key_map")
