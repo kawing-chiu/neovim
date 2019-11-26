@@ -8,7 +8,10 @@
 "    terminals as <Esc>(key), and the interpretation is not unified across
 "    terminals. The 'cat' command can be used to check how the terminal
 "    interprets <Alt-(key)> (or any other key code).
-" 7. Use local.plugin.vim and local.config.vim to add local settings.
+" 7. Use local.plugin.vim and local.config.vim to add local settings. Log
+"    function g:Warning and g:Debug can be used in these two files.
+" 8. Normally a vimscript will continue to execute when an error occurs,
+"    unless a try clause is used. See :h except-compat for more details.
 
 
 """""" Mapleader
@@ -44,6 +47,7 @@ let s:optional_external_dependencies = ['clangd', 'pyls', 'yapf']
 " Get current script name, <sfile> is the current script or funcion name, :t
 " means to get the filename only, not full path.
 let s:this_file_name = expand('<sfile>:t')
+let s:log_from_file = s:this_file_name
 
 function! s:AsString(msg)
     " This is how you test a variable's type:
@@ -55,38 +59,48 @@ function! s:AsString(msg)
     return l:msg
 endfunction
 
-function! s:Warning(msg)
-    let l:msg = '[' . s:this_file_name . '][warning] ' . s:AsString(a:msg)
+function! g:Warning(msg)
+    let l:msg = '[' . s:log_from_file . '][warning] ' . s:AsString(a:msg)
     echohl WarningMsg | echom l:msg  | echohl None
 endfunction
 
-function! s:Debug(msg)
+function! g:Debug(msg)
     if s:debug
-        let l:msg = '[' . s:this_file_name . '][debug] ' . s:AsString(a:msg)
+        let l:msg = '[' . s:log_from_file . '][debug] ' . s:AsString(a:msg)
         echom l:msg
     endif
 endfunction
-call s:Debug('debug on')
+call g:Debug('Debug on')
 
 """ Show more meaningful messages when some call fails.
 let s:warned_msgs = {}
-function! s:SafeCall(func, msg)
-    " func:
-    "   Funcref, the function to be called.
+function! s:SafeCall(func_ref, msg)
+    " func_ref:
+    "   Funcref, the function to be called. See :h Funcref.
     " msg:
     "   String, a user-friendly message. Each message will only be printed
     "   once.
     try
-        call a:func()
+        call a:func_ref()
     catch
         let l:warned = get(s:warned_msgs, a:msg)
         if !l:warned
-            let l:msg = 'Calling ' . s:AsString(a:func) . ' failed. '
+            let l:msg = 'Calling ' . s:AsString(a:func_ref) . ' failed. '
                         \ . s:AsString(a:msg)
-            call s:Warning(l:msg)
+            call g:Warning(l:msg)
             let s:warned_msgs[a:msg] = 1
         endif
     endtry
+endfunction
+
+""" Helper function for :source
+function! s:Source(file)
+    " file:
+    "   String, the full path to the file to be sourced.
+    let s:log_from_file = fnamemodify(a:file, ':t')
+    execute 'source ' . a:file
+    let s:log_from_file = s:this_file_name
+    call g:Debug('Sourced ' . fnamemodify(a:file, ':t'))
 endfunction
 
 
@@ -94,7 +108,7 @@ endfunction
 """ Check external dependencies
 for s:d in s:external_dependencies
     if !executable(s:d)
-        call s:Warning('Missing external dependency: ' . s:d)
+        call g:Warning('Missing external dependency: ' . s:d)
     endif
 endfor
 
@@ -104,7 +118,7 @@ if index(s:external_dependencies, 'ctags') >= 0 && executable('ctags')
     let s:d = system('ctags --version')
     " !~? means regex not match, ignore case
     if s:d !~? 'universal ctags'
-        call s:Warning('Your ctags is not universal ctags.
+        call g:Warning('Your ctags is not universal ctags.
                     \ Install universal ctags instead.')
     endif
 endif
@@ -112,7 +126,7 @@ endif
 """ Check optional external dependencies
 for s:d in s:optional_external_dependencies
     if !executable(s:d)
-        call s:Debug('Missing optional external dependency: ' . s:d)
+        call g:Debug('Missing optional external dependency: ' . s:d)
     endif
 endfor
 
@@ -201,6 +215,10 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'majutsushi/tagbar'
 Plug 'liuchengxu/vista.vim'
 
+""" Test runner
+Plug 'tpope/vim-dispatch'
+Plug 'janko/vim-test'
+
 """ Git
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -216,7 +234,7 @@ Plug 'liuchengxu/vim-which-key'
 
 """ Load local plugin list
 if s:source_local_config
-    execute 'source ' . s:local_plugin_file
+    call s:Source(s:local_plugin_file)
 endif
 
 call plug#end()
@@ -284,7 +302,7 @@ function! s:TabHandler()
         " following completed_is_snippet() check is true. (This is learned
         " from its code, so may be subject to change.)
         if ncm2_ultisnips#completed_is_snippet()
-            call s:Debug('ncm2 completed_is_snippet')
+            call g:Debug('ncm2 completed_is_snippet')
             " The argument of this function will be pass to feedkeys() if
             " ncm2_ultisnips has nothing to expand.
             return ncm2_ultisnips#expand_or("")
@@ -318,7 +336,7 @@ let g:LanguageClient_diagnosticsMaxSeverity = 'Error'
 "let g:LanguageClient_loggingLevel = 'DEBUG'
 
 " Define shortcuts for LanguageClient
-function SetLSPShortcuts()
+function! SetLSPShortcuts()
     " Jump to definition.
     nnoremap <buffer> <Leader>ld :call LanguageClient#textDocument_definition()<CR>
     " Jump to places where the symbol under cursor is used.
@@ -335,7 +353,7 @@ function SetLSPShortcuts()
     nnoremap <buffer> <Leader>lh :call LanguageClient#textDocument_hover()<CR>
     nnoremap <buffer> <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
     nnoremap <buffer> <Leader>la :call LanguageClient#workspace_applyEdit()<CR>
-endfunction()
+endfunction
 
 augroup LSP
   autocmd!
@@ -417,7 +435,8 @@ let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-omnisharp',
 
 """ General settings
 " Set python path explicitly, so that we can use virtualenv without installing
-" pynvim in it. See :h python-virtualenv.
+" pynvim in it. See :h python-virtualenv. This should point to a 'system'
+" python where the pynvim package is installed.
 let g:python3_host_prog = '/usr/bin/python3'
 
 " Search options
@@ -547,5 +566,11 @@ cnoremap <C-a> <C-b>
 
 """ Load local config file
 if s:source_local_config
-    execute 'source ' . s:local_config_file
+    call s:Source(s:local_config_file)
 endif
+
+""" Do some cleanup
+call g:Debug("End of init.vim")
+
+delfunction g:Warning
+delfunction g:Debug
