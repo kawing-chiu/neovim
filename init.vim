@@ -167,11 +167,15 @@ Plug 'ncm2/ncm2'
 " This is a requirement of ncm2
 Plug 'roxma/nvim-yarp'
 
-" ncm2 completion sources
+" ncm2 completion sources and plugins
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-vim' | Plug 'Shougo/neco-vim'
+
+Plug 'ncm2/ncm2-html-subscope'
+Plug 'ncm2/ncm2-markdown-subscope'
+Plug 'ncm2/ncm2-rst-subscope'
 
 " deoplete's documentation is bad. That's the reason I don't use it.
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -274,6 +278,10 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 let ncm2#popup_delay = 5
 " This fuzzy matcher seems to be better
 let g:ncm2#matcher = 'substrfuzzy'
+
+" This value means that sources with priority between 1 and 6 will be used
+" when 2 characters are typed, and sources with priority >= 7 will be used
+" when 1 character is typed.
 let g:ncm2#complete_length=[[1,2],[7,1]]
 
 """ ultisnips
