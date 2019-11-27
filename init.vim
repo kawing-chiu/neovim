@@ -390,7 +390,7 @@ nnoremap <Leader>n :NERDTreeFind<CR>
 let g:NERDTreeQuitOnOpen = 1
 
 """ tagbar
-nnoremap <Leader>k :TagbarToggle<CR>
+"nnoremap <Leader>k :TagbarToggle<CR>
 let g:tagbar_sort = 0
 
 """ fzf
@@ -410,12 +410,21 @@ let g:jedi#completions_enabled = 0
 autocmd FileType python nnoremap <buffer> <Leader>lr :call jedi#rename()<CR>
 
 """ vim-test
-nnoremap <silent> <leader>tt :TestNearest<CR>
-nnoremap <silent> <leader>tf :TestFile<CR>
-nnoremap <silent> <leader>ts :TestSuite<CR>
+nnoremap <silent> <Leader>tt :TestNearest<CR>
+nnoremap <silent> <Leader>tf :TestFile<CR>
+nnoremap <silent> <Leader>ts :TestSuite<CR>
 
 """ vim-gitgutter
 let g:gitgutter_override_sign_column_highlight = 0
+
+""" vista.vim
+nnoremap <silent> <Leader>k :Vista!!<CR>
+
+let g:vista_sidebar_width = 40
+let g:vista_blink = [1, 100]
+let g:vista_top_level_blink = [1, 100]
+let g:vista_echo_cursor_strategy = 'floating_win'
+let g:vista#renderer#enable_icon = 0
 
 """ vim-which-key
 let g:space_key_map = {
