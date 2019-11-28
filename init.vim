@@ -98,7 +98,7 @@ function! s:Source(file)
     " file:
     "   String, the full path to the file to be sourced.
     let s:log_from_file = fnamemodify(a:file, ':t')
-    execute 'source ' . a:file
+    execute 'source' a:file
     let s:log_from_file = s:this_file_name
     call g:Debug('Sourced ' . fnamemodify(a:file, ':t'))
 endfunction
@@ -591,6 +591,25 @@ nnoremap -l :setl list! list?<CR>
 
 " Use <C-a> to move to the start of line, like in bash
 cnoremap <C-a> <C-b>
+
+" Move the current line to the higher/middle/lower part of the window.
+nnoremap H zt5<C-y>
+nnoremap M zz
+
+function! s:MoveCurrLineLower()
+    normal zb
+    " winheight(0) is the height of the current window.
+    " line('w0') is the line number of the first visible line.
+    let last_line = line('w0') + winheight(0) -1
+    " getpos('.')[1] is the line number of the cursor.
+    let cursor_pos = getpos('.')[1]
+    let diff = last_line - cursor_pos
+    if diff < 5
+        let move_up = 5 - diff
+        execute 'normal' string(move_up) . "\<C-e>"
+    endif
+endfunction
+nnoremap <silent> L :call <SID>MoveCurrLineLower()<CR>
 
 """ Load local config file
 if s:source_local_config
