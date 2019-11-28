@@ -442,6 +442,25 @@ let g:space_key_map = {
 call which_key#register('<Space>', "g:space_key_map")
 nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 
+" Trying to reuse vim-which-key to show the snippets list. Not quite there yet
+" because vim-which-key has no scroll function at the moment.
+function! s:ShowSnippets()
+    call UltiSnips#SnippetsInCurrentScope(1)
+    let g:ultisnips_key_map = {}
+    for [key, info] in items(g:current_ulti_dict_info)
+        let g:ultisnips_key_map[key] = info.description
+        " let parts = split(info.location, ':')
+        " { "key": key,
+        "  \"path": parts[0],
+        "  \"linenr": parts[1],
+        "  \"description": info.description,
+        "  \}
+    endfor
+    call which_key#register('UltiSnips', "g:ultisnips_key_map")
+    WhichKey 'UltiSnips'
+endfunction
+
+"nnoremap <silent> <leader>S :call <SID>ShowSnippets()<CR>
 
 """""" Config for unused plugins
 
@@ -601,8 +620,8 @@ function! s:MoveCurrLineLower()
     " winheight(0) is the height of the current window.
     " line('w0') is the line number of the first visible line.
     let last_line = line('w0') + winheight(0) -1
-    " getpos('.')[1] is the line number of the cursor.
-    let cursor_pos = getpos('.')[1]
+    " getpos('.')[1] or line('.') is the line number of the cursor.
+    let cursor_pos = line('.')
     let diff = last_line - cursor_pos
     if diff < 5
         let move_up = 5 - diff
