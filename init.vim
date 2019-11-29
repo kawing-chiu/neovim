@@ -12,6 +12,8 @@
 "    function g:Warning and g:Debug can be used in these two files.
 " 8. Normally a vimscript will continue to execute when an error occurs,
 "    unless a try clause is used. See :h except-compat for more details.
+" 9. Always put a # after comparison operators unless you have a good reason.
+"    Don't use plain == or !=. See :h ==# for more details.
 
 
 """""" Mapleader
@@ -51,7 +53,7 @@ let s:log_from_file = s:this_file_name
 
 function! s:AsString(msg)
     " This is how you test a variable's type:
-    if type(a:msg) != v:t_string
+    if type(a:msg) !=# v:t_string
         let l:msg = string(a:msg)
     else
         let l:msg = a:msg
@@ -114,7 +116,7 @@ endfor
 
 """ Check whether ctags is universal-ctags
 " This is how you check an element is in a list:
-if index(s:external_dependencies, 'ctags') >= 0 && executable('ctags')
+if index(s:external_dependencies, 'ctags') >=# 0 && executable('ctags')
     let s:d = system('ctags --version')
     " !~? means regex not match, ignore case
     if s:d !~? 'universal ctags'
