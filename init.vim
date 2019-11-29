@@ -424,11 +424,14 @@ nnoremap <silent> <Leader>k :Vista!!<CR>
 
 let g:vista_sidebar_width = 40
 let g:vista_stay_on_open = 0
+let g:vista#renderer#enable_icon = 0
+
 let g:vista_blink = [1, 100]
 let g:vista_top_level_blink = [1, 100]
 let g:vista_echo_cursor_strategy = 'floating_win'
-let g:vista#renderer#enable_icon = 0
 let g:vista_cursor_delay = 100
+let g:vista_update_on_text_changed = 1
+let g:vista_update_on_text_changed_delay = 800
 
 """ vim-which-key
 let g:space_key_map = {
