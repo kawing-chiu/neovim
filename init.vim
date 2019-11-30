@@ -566,6 +566,13 @@ if executable('rg')
 endif
 
 nnoremap <Leader>g :silent lgrep<Space>''<Left>
+" Use the word under cursor as search pattern. expand("<cword>") is the word
+" under cursor. This version does not work when the word under cursor has
+" special characters like '#' or '%', because vim will try to expand them as
+" 'alternate file name' etc. Can look into fzf-vim's :Rg command to learn how
+" to handle this.
+nnoremap <expr> <Leader>G ":silent lgrep -F '" . expand("<cword>")
+            \ . "'<Left>"
 
 " Move through location list. 'l' for location list.
 nnoremap <silent> [l :lprevious<CR>
