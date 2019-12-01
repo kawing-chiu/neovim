@@ -219,7 +219,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 
 """ Code structure viewer
 Plug 'majutsushi/tagbar'
-Plug 'liuchengxu/vista.vim'
+Plug 'liuchengxu/vista.vim', { 'commit': '39360b640a5e7a04fb8' }
 
 """ Test runner
 Plug 'tpope/vim-dispatch'
@@ -432,7 +432,7 @@ let g:vista_blink = [1, 100]
 let g:vista_top_level_blink = [1, 100]
 let g:vista_echo_cursor_strategy = 'floating_win'
 let g:vista_cursor_delay = 100
-"let g:vista_floating_delay = 100
+"let g:vista_floating_delay = 1000
 
 """ vim-which-key
 let g:space_key_map = {
