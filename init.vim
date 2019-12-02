@@ -14,6 +14,8 @@
 "    unless a try clause is used. See :h except-compat for more details.
 " 9. Always put a # after comparison operators unless you have a good reason.
 "    Don't use plain == or !=. See :h ==# for more details.
+" 10. To show where an option or a key map etc is defined, use the :verbose
+"     command. For example :verbose imap <Tab>.
 
 
 """""" Mapleader
