@@ -386,6 +386,8 @@ let g:multi_cursor_use_default_mapping = 0
 """ nerdtree
 nnoremap <Leader>j :NERDTreeToggle<CR>
 nnoremap <Leader>n :NERDTreeFind<CR>
+nnoremap -j :let g:NERDTreeQuitOnOpen = 1 - g:NERDTreeQuitOnOpen<CR>
+            \:let g:NERDTreeQuitOnOpen<CR>
 "nnoremap <Leader>m :tabe %<CR>:NERDTreeFind<CR>
 
 " Close nerdtree after opening a file by default
