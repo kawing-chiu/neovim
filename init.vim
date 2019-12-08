@@ -175,6 +175,7 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-bufword'
+Plug 'fgrsnau/ncm2-otherbuf'
 Plug 'ncm2/ncm2-vim' | Plug 'Shougo/neco-vim'
 
 Plug 'ncm2/ncm2-html-subscope'
@@ -400,7 +401,7 @@ let g:NERDTreeQuitOnOpen = 1
 let g:tagbar_sort = 0
 
 """ fzf
-nnoremap <Leader>F :FZF<CR>
+nnoremap <Leader>f :FZF<CR>
 
 """ yapf
 autocmd FileType python nnoremap <buffer> <Leader>Y :YAPF<CR>
