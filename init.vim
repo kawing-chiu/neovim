@@ -382,6 +382,8 @@ let g:workspace_autosave = 0
 " Disable the persist undo history feature. It is not as useful as it seems.
 let g:workspace_persist_undo_history = 0
 let g:workspace_undodir='.undodir.vim'
+" Don't load workspace if nvim is started with arguments.
+let g:workspace_session_disable_on_args = 1
 
 """ vim-multiple-cursors
 let g:multi_cursor_use_default_mapping = 0
