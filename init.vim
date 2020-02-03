@@ -222,7 +222,8 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 
 """ Code structure viewer
 Plug 'majutsushi/tagbar'
-Plug 'liuchengxu/vista.vim', { 'commit': '39360b640a5e7a04fb8' }
+Plug 'liuchengxu/vista.vim'
+" Plug 'liuchengxu/vista.vim', { 'commit': '39360b640a5e7a04fb8' }
 
 """ Test runner
 Plug 'tpope/vim-dispatch'
@@ -437,7 +438,7 @@ let g:vista_update_on_text_changed_delay = 800
 
 let g:vista_blink = [1, 100]
 let g:vista_top_level_blink = [1, 100]
-let g:vista_echo_cursor_strategy = 'floating_win'
+let g:vista_echo_cursor_strategy = 'scroll'
 let g:vista_cursor_delay = 100
 "let g:vista_floating_delay = 1000
 
@@ -509,7 +510,7 @@ set tabstop=4 shiftwidth=4 expandtab
 filetype plugin indent on
 syntax enable
 
-" More reliable synctax highlighting
+" More reliable syntax highlighting
 autocmd BufEnter * syntax sync fromstart
 
 set backspace=indent,eol,start
