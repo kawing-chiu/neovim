@@ -391,11 +391,21 @@ let g:workspace_session_disable_on_args = 1
 let g:multi_cursor_use_default_mapping = 0
 
 """ nerdtree
-nnoremap <Leader>j :NERDTreeToggle<CR>
-nnoremap <Leader>n :NERDTreeFind<CR>
+function! s:SmartNERDTree()
+    if g:NERDTree.IsOpen()
+        NERDTreeToggle
+    elseif @% !=# ""
+        NERDTreeFind
+    else
+        NERDTreeToggle
+    endif
+endfunction
+
+"nnoremap <Leader>j :NERDTreeToggle<CR>
+"nnoremap <Leader>n :NERDTreeFind<CR>
+nnoremap <silent> <Leader>j :call <SID>SmartNERDTree()<CR>
 nnoremap -j :let g:NERDTreeQuitOnOpen = 1 - g:NERDTreeQuitOnOpen<CR>
             \:let g:NERDTreeQuitOnOpen<CR>
-"nnoremap <Leader>m :tabe %<CR>:NERDTreeFind<CR>
 
 " Close nerdtree after opening a file by default
 let g:NERDTreeQuitOnOpen = 1
