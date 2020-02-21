@@ -237,6 +237,7 @@ Plug 'airblade/vim-gitgutter'
 " Python
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'davidhalter/jedi-vim'
+Plug 'psf/black'
 
 """ Misc
 " Show key-bindings in popup window
@@ -407,7 +408,13 @@ let g:tagbar_sort = 0
 nnoremap <Leader>f :FZF<CR>
 
 """ yapf
-autocmd FileType python nnoremap <buffer> <Leader>Y :YAPF<CR>
+"autocmd FileType python nnoremap <buffer> <Leader>Y :YAPF<CR>
+
+""" black
+autocmd FileType python nnoremap <buffer> <Leader>B :Black<CR>
+autocmd BufWritePre *.py execute ':Black'
+
+let g:black_skip_string_normalization = 1
 
 """ jedi-vim
 " We are using ncm2 as completion framework, so jedi-vim's completions should

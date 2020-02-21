@@ -79,6 +79,13 @@ snippet :obj ":obj: role" w
 :obj:\`$1\`
 endsnippet
 
+## black
+snippet fmt-off "# fmt: off" b
+# fmt: off
+$0
+# fmt: on
+endsnippet
+
 ## attrs
 snippet @as "@attr.s" b
 @attr.s
@@ -742,6 +749,11 @@ endsnippet
 
 snippet __delete "__delete__ method" b
 def __delete__(self, instance):
+	${0:pass}
+endsnippet
+
+snippet __set_name "__set_name__ method" b
+def __set_name__(self, owner, name):
 	${0:pass}
 endsnippet
 
