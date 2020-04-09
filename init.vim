@@ -520,6 +520,9 @@ let g:python3_host_prog = '/usr/bin/python3'
 " Search options
 set hlsearch ignorecase smartcase incsearch
 
+" Show line number
+set number relativenumber
+
 " Always expand tab into spaces
 set tabstop=4 shiftwidth=4 expandtab
 
