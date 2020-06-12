@@ -646,7 +646,7 @@ vnoremap g<C-]> <C-]>
 
 " Toggle some common options
 nnoremap -p :set paste! paste?<CR>
-nnoremap -n :setl nu! nu?<CR>
+nnoremap -n :setl nu! rnu! nu?<CR>
 nnoremap -l :setl list! list?<CR>
 
 " Use <C-a> to move to the start of line, like in bash
