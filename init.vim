@@ -410,6 +410,10 @@ nnoremap -j :let g:NERDTreeQuitOnOpen = 1 - g:NERDTreeQuitOnOpen<CR>
 " Close nerdtree after opening a file by default
 let g:NERDTreeQuitOnOpen = 1
 
+" Remove some nerdtree bindings
+let g:NERDTreeMapJumpFirstChild = ""
+let g:NERDTreeMapJumpLastChild = ""
+
 """ tagbar
 "nnoremap <Leader>k :TagbarToggle<CR>
 let g:tagbar_sort = 0
