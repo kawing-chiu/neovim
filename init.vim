@@ -16,6 +16,8 @@
 "    Don't use plain == or !=. See :h ==# for more details.
 " 10. To show where an option or a key map etc is defined, use the :verbose
 "     command. For example :verbose imap <Tab>.
+" 11. Vim里面单引号和双引号的区别是，单引号里的反斜杠没有特殊含义。比如'\n'就
+"     是反斜杠和n而"\n"是回车。
 
 
 """""" Mapleader
@@ -410,9 +412,13 @@ nnoremap -j :let g:NERDTreeQuitOnOpen = 1 - g:NERDTreeQuitOnOpen<CR>
 " Close nerdtree after opening a file by default
 let g:NERDTreeQuitOnOpen = 1
 
-" Remove some nerdtree bindings
-let g:NERDTreeMapJumpFirstChild = ""
-let g:NERDTreeMapJumpLastChild = ""
+" Map 'p' for preview instead of the default 'go'
+let g:NERDTreeMapPreview = 'p'
+let g:NERDTreeMapJumpParent = 'P'
+
+" 删除nerdtree的'J'和'K'快捷键，因为已被使用（用来切换tab）。
+let g:NERDTreeMapJumpFirstChild = ''
+let g:NERDTreeMapJumpLastChild = ''
 
 """ tagbar
 "nnoremap <Leader>k :TagbarToggle<CR>
