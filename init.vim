@@ -619,7 +619,6 @@ nnoremap <silent> ]l :lnext<CR>
 
 """ Key mappings
 " Switch to previous/next tab
-nnoremap = gt
 nnoremap K gt
 nnoremap J gT
 
@@ -642,6 +641,7 @@ nnoremap k gk
 vnoremap k gk
 nnoremap gk k
 vnoremap gk k
+
 " Synonym for j, k, mainly for ipad
 nnoremap <C-j> gj
 vnoremap <C-j> gj
@@ -654,7 +654,7 @@ vnoremap <C-]> g<C-]>
 nnoremap g<C-]> <C-]>
 vnoremap g<C-]> <C-]>
 
-" Toggle some common options
+" Shortcut to toggle some common options
 nnoremap -p :set paste! paste?<CR>
 nnoremap -n :setl nu! rnu! nu?<CR>
 nnoremap -l :setl list! list?<CR>
